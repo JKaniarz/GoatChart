@@ -3,11 +3,12 @@ import random
 num_players = 1 # how many sets of player cards to add
 num_draws = 10 # how wide is the table
 num_stars = 10 # how tall is the table
+num_seven_stars = 0 # How many stars are lucky 7's worth?
 
 # Table of the card types and quantities.
 # Note your advanced skills and curses in the "Added" column.
-# The Base column is the 35 Basic skill cards.
-# The player column is multiplied by the num_players
+# The Base column is the 35 Basic skill cards. Don't touch.
+# The Player column is multiplied by num_players. Don't touch.
 cards = [
     #Symbol     Added   Base    Player
     ["💀",       1,      4,      0],
@@ -66,6 +67,9 @@ def star_count(card):
         count += min(max(card[3] - 1,0),max(card[4] - 1,0)) 
     else:
         count += min(card[3],card[4]) #pair up half stars
+
+    count += card[2] * num_seven_stars # convert 7's to stars
+    
     return count
 
 
@@ -82,6 +86,8 @@ def main():
         if not card[0]:
             non_curse_count += 1
 
+    print("Calculating odds with {:d} players and {:d} curses".format(num_players, cards[0][1]))
+    print("Sevens count as {:d} stars.".format(num_seven_stars))
     print(str(non_curse_count)+" of " + str(len(deck)) + " cards in the deck are not curses.")
     print("On average " + "{:.2f}".format((card_sum[1] + card_sum[3] / 2 + card_sum[4] / 2 + card_sum[5]) / len(deck)) + "★ per card")
     print("On average " + "{:.2f}".format((card_sum[1] + card_sum[3] / 2 + card_sum[4] / 2 + card_sum[5]) / non_curse_count) + "★ per non-curse card")
@@ -108,6 +114,7 @@ def main():
     for i,row in enumerate(goat_chart):
         print(str(i + 1) + "★\t","\t".join(map(lambda x: "{:.0%}".format(x / num_trials), row)))
 
+    print()
     print("7's\t","\t".join(map(lambda x: "{:.1f}".format((x / num_trials)), seven_chart)))
     
 main()
