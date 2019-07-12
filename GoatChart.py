@@ -4,6 +4,8 @@ num_players = 1 # how many sets of player cards to add
 num_draws = 10 # how wide is the table
 num_stars = 10 # how tall is the table
 num_seven_stars = 0 # How many stars are lucky 7's worth?
+add_flying_roots = False # Are you playing with flying roots?
+add_prodigy_mode = False # Are you playing with prodigy mode?
 
 # Table of the card types and quantities.
 # Note your advanced skills and curses in the "Added" column.
@@ -50,6 +52,10 @@ def build_deck():
         # add coppies of the card to the deck
         for _ in range(c[1] + c[2] + num_players * c[3]):
             deck.append(card)
+    if add_flying_roots:
+        deck += [(0,0,1,0,0,1)] * 4
+    if add_prodigy_mode:
+        deck += [(0,1,1,0,0,1)] * 5
     return deck
 
 # Returns the number of stars that can be made from the combination of
@@ -107,7 +113,7 @@ def main():
             # add a success for each cell 1 through star_count.
             for s in range(min(star_count(card_sum),num_stars)):
                 goat_chart[s][i]+=1
-            seven_chart[i]+=card_sum[3]
+            seven_chart[i]+=card_sum[2]
 
     # print the table
     print("Draw:\t","\t".join(map(lambda x: str(x + 1),range(num_draws))))
